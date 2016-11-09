@@ -13,6 +13,7 @@ import Button from '../components/button';
 import Header from '../components/header';
 
 import Login from './login';
+import Breathing from './breathing';
 
 import styles from '../styles/common-styles.js';
 
@@ -62,6 +63,11 @@ export default class account extends Component {
                   onpress={this.logout.bind(this)}
                   button_styles={styles.primary_button}
                   button_text_styles={styles.primary_button_text} />
+             <Button
+                  text="Breathing"
+                  onpress={this.goToBreathing.bind(this)}
+                  button_styles={styles.primary_button}
+                  button_text_styles={styles.primary_button_text} />
             </View>
         }
         </View>
@@ -78,6 +84,12 @@ export default class account extends Component {
       });
     });
 
+  }
+
+  goToBreathing(){
+    this.props.navigator.push({
+      component: Breathing
+    });
   }
 
 }

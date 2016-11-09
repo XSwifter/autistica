@@ -39,5 +39,14 @@ module.exports = StyleSheet.create({
   image: {
     width: 100,
     height: 100
+  },
+  circle: {
+    height: 30,
+    width: 30,
+    borderRadius: 30,
+    borderWidth: 1,
+    borderColor: 'blue',
+    backgroundColor: 'blue',
+    opacity: 0.5
   }
 });
