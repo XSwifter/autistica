@@ -20,13 +20,14 @@ import Dimensions from 'Dimensions';
 
 export default class breathing extends Component {
 
+    static inhaleValue = 'Inhale';
+    static exhaleValue = 'Exhale';
+
     constructor(props) {
 
         super(props);
         this.state = {
             loaded: false,
-            bounceValue: new Animated.Value(0),
-            radius: 0
         }
 
     }
@@ -36,8 +37,9 @@ export default class breathing extends Component {
         this.setState({
             loaded: true,
             bounceValue: new Animated.Value(0),
-            radius: (Dimensions.get("window").width > Dimensions.get("window").height ? Dimensions.get("window").height : Dimensions.get("window").width) - 10,
-            minRadiusValue: 0
+            radius: (Dimensions.get("window").width > Dimensions.get("window").height ? Dimensions.get("window").height : Dimensions.get("window").width) - 200,
+            minRadiusValue: 60,
+            headerValue: breathing.inhaleValue
         });
     }
 
@@ -45,7 +47,6 @@ export default class breathing extends Component {
         return (
 
             <View style={styles.container}>
-                <Header text="Breathing module" loaded={this.state.loaded}/>
                 <View style={[styles.body,
                     {
                         flexDirection: 'column',
@@ -60,13 +61,15 @@ export default class breathing extends Component {
 
                     ]}/>
                 </View>
-                <View style={{flex: 1}}>
-                    <Button
-                        text="Go back"
-                        onpress={this.goBackToAccount.bind(this)}
-                        button_styles={styles.primary_button}
-                        button_text_styles={styles.primary_button_text}/>
-                </View>
+                <Text style={{textAlign: 'center', fontSize: 30, flex:1}} >{this.state.headerValue}</Text>
+
+                <Button
+                    text="Go back"
+                    style={{flex : 1}}
+                    onpress={this.goBackToAccount.bind(this)}
+                    button_styles={styles.primary_button}
+                    button_text_styles={[styles.primary_button_text, {textAlign : 'center'}]}/>
+
             </View>
 
 
@@ -75,26 +78,48 @@ export default class breathing extends Component {
 
     componentDidMount() {
         this.state.bounceValue.setValue(this.state.minRadiusValue);
-        this.animateRepetitiveCircle();
+        this.inhale();
     }
 
     goBackToAccount() {
         this.props.navigator.pop({});
     }
 
-    animateRepetitiveCircle() {
-        Animated.sequence([
-            Animated.timing(this.state.bounceValue, {
+    inhale() {
+        Animated.timing(this.state.bounceValue, {
                 toValue: this.state.radius,
-                duration: 6000
-            }),
-            Animated.timing(this.state.bounceValue, {
-                toValue: this.state.minRadiusValue,
-                duration: 6000
-            })
-        ]).start(() => {
-            this.animateRepetitiveCircle()
+                duration: 4000
+            }
+        )
+            .start(() => {
+                this.setState({
+                    headerValue : breathing.exhaleValue
+                });
+                this.exhale()
+            });
+    };
+
+
+    exhale() {
+        Animated.timing(this.state.bounceValue, {
+            toValue: this.state.minRadiusValue,
+            duration: 4000
+        }).
+        start(() => {
+            this.inhale()
+            this.setState(
+                {
+                    headerValue : breathing.inhaleValue
+                }
+            );
         });
     };
 
+    /*
+     Animated.timing(this.state.headerValue, {
+     toValue: this.state.headerValue == breathing.inhaleValue ? breathing.exhaleValue : breathing.inhaleValue,
+     duration: 0*/
 }
+
+
+
